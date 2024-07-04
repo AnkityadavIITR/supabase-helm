@@ -2,13 +2,13 @@ secret:
   jwt:
     anonKey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyAgCiAgICAicm9sZSI6ICJhbm9uIiwKICAgICJpc3MiOiAic3VwYWJhc2UtZGVtbyIsCiAgICAiaWF0IjogMTY0MTc2OTIwMCwKICAgICJleHAiOiAxNzk5NTM1NjAwCn0.dc_X5iR_VP_qT0zsiyj_I_OZ2T9FtRU2BBNWN8Bu4GE
     serviceKey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyAgCiAgICAicm9sZSI6ICJzZXJ2aWNlX3JvbGUiLAogICAgImlzcyI6ICJzdXBhYmFzZS1kZW1vIiwKICAgICJpYXQiOiAxNjQxNzY5MjAwLAogICAgImV4cCI6IDE3OTk1MzU2MDAKfQ.DaYlNEoUrrEn2Ig7tqibS-PHK5vgusbcbo7X36XVt4Q
-    secret: your-super-secret-jwt-token-with-at-least-32-characters-long
+    secret: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6Ik1pbmRjYXNlIiwiaWF0IjoxNTE2MjM5MDIyfQ.8AN8vqZEj7dSS5BAysq4XX-8m_Qj89XuXbaG3P0Tiqo
   smtp:
     username: your-mail@example.com
     password: example123456
   dashboard:
     username: supabase
-    password: this_password_is_insecure_and_should_be_updated
+    password: mindcase_db
   db:
     username: postgres
     password: example123456
@@ -36,7 +36,7 @@ studio:
   environment:
     STUDIO_DEFAULT_ORGANIZATION: "My Organization"
     STUDIO_DEFAULT_PROJECT: "My Project"
-    SUPABASE_PUBLIC_URL: http://example.com/
+    SUPABASE_PUBLIC_URL: http://supabase.mindcase.co/
     NEXT_PUBLIC_ENABLE_LOGS: "true"
   livenessProbe:
     httpGet:
@@ -48,8 +48,8 @@ auth:
   image:
     tag: v2.143.0
   environment:
-    API_EXTERNAL_URL: http://example.com
-    GOTRUE_SITE_URL: http://example.com
+    API_EXTERNAL_URL: http://supabase.mindcase.co
+    GOTRUE_SITE_URL: http://supabase.mindcase.co
     GOTRUE_EXTERNAL_EMAIL_ENABLED: "true"
     GOTRUE_MAILER_AUTOCONFIRM: "true"
     GOTRUE_SMTP_ADMIN_EMAIL: "your-mail@example.com"
@@ -107,16 +107,16 @@ kong:
     KONG_DECLARATIVE_CONFIG: /usr/local/kong/kong.yml
     KONG_LOG_LEVEL: info
   ingress:
-    enabled: true
+    enabled: true  # Disable Kong Ingress definition here to avoid conflicts
     className: "nginx"
     annotations:
       nginx.ingress.kubernetes.io/rewrite-target: /
-    tls: []
-      # - secretName: example-ingress-tls
-      #   hosts:
-      #     - example.com
+    # tls:
+    #   - hosts:
+    #     - supabase.mindcase.co
+    #     secretName: example-ingress-tls
     hosts:
-      - host: example.com
+      - host: supabase.mindcase.co
         paths:
           - path: /
             pathType: Prefix
@@ -138,9 +138,6 @@ vector:
       path: /health
       port: 9001
     initialDelaySeconds: 3
-  ## Vector requires logs from the control plane to function.
-  ## This is normally stored in /var/log/pods
-  ## Modify these values according to your environment.
   volumeMounts:
     - name: pod-logs
       mountPath: /var/log/pods

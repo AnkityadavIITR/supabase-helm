@@ -1,0 +1,87 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: supabase-ingress
+  namespace: supabase
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - supabase.mindcase.co
+    secretName: example-ingress-tls
+  rules:
+  - host: supabase.mindcase.co
+    http:
+      paths:
+      - path: /kong
+        pathType: Prefix
+        backend:
+          service:
+            name: demo-supabase-kong
+            port:
+              number: 8000
+      - path: /auth
+        pathType: Prefix
+        backend:
+          service:
+            name: demo-supabase-auth
+            port:
+              number: 9999
+      - path: /db
+        pathType: Prefix
+        backend:
+          service:
+            name: demo-supabase-db
+            port:
+              number: 5432
+      - path: /functions
+        pathType: Prefix
+        backend:
+          service:
+            name: demo-supabase-functions
+            port:
+              number: 9000
+      - path: /imgproxy
+        pathType: Prefix
+        backend:
+          service:
+            name: demo-supabase-imgproxy
+            port:
+              number: 5001
+      - path: /meta
+        pathType: Prefix
+        backend:
+          service:
+            name: demo-supabase-meta
+            port:
+              number: 8080
+      - path: /realtime
+        pathType: Prefix
+        backend:
+          service:
+            name: demo-supabase-realtime
+            port:
+              number: 4000
+      - path: /rest
+        pathType: Prefix
+        backend:
+          service:
+            name: demo-supabase-rest
+            port:
+              number: 3000
+      - path: /storage
+        pathType: Prefix
+        backend:
+          service:
+            name: demo-supabase-storage
+            port:
+              number: 5000
+      - path: /studio
+        pathType: Prefix
+        backend:
+          service:
+            name: demo-supabase-studio
+            port:
+              number: 3000
